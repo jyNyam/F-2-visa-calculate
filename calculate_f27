@@ -1,0 +1,130 @@
+def calculate_f27_score(
+    age,  # 만나이 (18~60)
+    education_level,  # 0: 고졸 이하, 1: 전문대, 2: 학사, 3: 석사, 4: 박사
+    korean_level,  # TOPIK/KIIP 등급 (1~6)
+    annual_income,  # 연간 소득 (만원)
+    has_korean_degree,  # 국내 학위 취득 여부 (True/False)
+    continuous_stay_years,  # 국내 연속 체류 년수
+    has_national_certificate,  # 국가자격증 보유 여부
+    recommendation_letter,  # 추천서 (0: 없음, 1: 지자체, 2: 중앙부처)
+    social_contribution,  # 사회봉사 시간 (시간)
+    tax_payment,  # 연간 세금 납부액 (만원)
+    violations_immigration,  # 출입국법 위반 횟수
+    violations_criminal  # 국내법 위반 횟수
+):
+    """
+    2026년 기준 F-2-7 우수인재 거주비자 점수 계산기
+    총점 170점 만점, 80점 이상 시 신청 자격 부여
+    """
+    score = 0
+    
+    # 1. 나이 (최대 25점)
+    if 25 <= age <= 29:
+        score += 25
+    elif 18 <= age <= 24 or 30 <= age <= 34:
+        score += 23
+    elif 35 <= age <= 39:
+        score += 20
+    elif 40 <= age <= 44:
+        score += 12
+    elif 45 <= age <= 50:
+        score += 8
+    else:
+        score += 3
+    
+    # 2. 학력 (최대 25점)
+    if education_level == 4:
+        score += 25
+    elif education_level == 3:
+        score += 20
+    elif education_level == 2:
+        score += 15
+    elif education_level == 1:
+        score += 10
+    else:
+        score += 5
+    
+    # 3. 한국어 능력 (최대 20점)
+    if korean_level >= 5:
+        score += 20
+    elif korean_level == 4:
+        score += 15
+    elif korean_level == 3:
+        score += 10
+    elif korean_level == 2:
+        score += 5
+    else:
+        score += 3
+    
+    # 4. 연간 소득 (최대 60점)
+    if annual_income >= 10000:
+        score += 60
+    elif annual_income >= 9000:
+        score += 58
+    elif annual_income >= 8000:
+        score += 56
+    elif annual_income >= 7000:
+        score += 53
+    elif annual_income >= 6000:
+        score += 50
+    elif annual_income >= 5000:
+        score += 45
+    elif annual_income >= 4000:
+        score += 40
+    elif annual_income >= 3000:
+        score += 30
+    elif annual_income >= 2500:
+        score += 10
+    else:
+        score += 0
+    
+    # 5. 가점항목 (최대 40점)
+    if has_korean_degree:
+        score += 15
+    if continuous_stay_years >= 3:
+        score += 10
+    if has_national_certificate:
+        score += 10
+    if recommendation_letter == 1:
+        score += 10
+    elif recommendation_letter == 2:
+        score += 15
+    if social_contribution >= 200:
+        score += 5
+    if tax_payment >= 500:
+        score += 5
+    
+    # 6. 감점항목
+    score -= (violations_immigration * 20)
+    score -= (violations_criminal * 30)
+    
+    # 점수 제한
+    score = max(0, min(170, score))
+    
+    # 체류기간 판단
+    stay_period = "미확인"
+    if score >= 130:
+        stay_period = "5년"
+    elif score >= 120:
+        stay_period = "3년"
+    elif score >= 110:
+        stay_period = "2년"
+    elif score >= 80:
+        stay_period = "1년"
+    
+    eligibility = "신청 가능" if score >= 80 else "신청 불가"
+    
+    return {
+        '총점': score,
+        '합격여부': eligibility,
+        '예상체류기간': stay_period
+    }
+
+# 사용 예시
+result = calculate_f27_score(
+    age=28, education_level=3, korean_level=4, annual_income=6500,
+    has_korean_degree=True, continuous_stay_years=4, has_national_certificate=True,
+    recommendation_letter=1, social_contribution=250, tax_payment=600,
+    violations_immigration=0, violations_criminal=0
+)
+print(result)  # {'총점': 165, '합격여부': '신청 가능', '예상체류기간': '5년'}
