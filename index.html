@@ -3,145 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>F-2-7 우수인재 거주비자 점수 계산기</title>
+    <title>F-2-7 우수인재 거주비자 점수 계산기 (2026)</title>
     <style>
-        /* CSS: 디자인 영역 */
-        body { font-family: 'Malgun Gothic', sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; padding: 20px; }
-        .container { background-color: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
-        h1 { text-align: center; color: #333; font-size: 24px; margin-bottom: 20px; }
-        .section { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        .section h3 { margin: 0 0 10px 0; font-size: 16px; color: #555; }
-        .input-group { margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        label { font-size: 14px; color: #333; }
-        input[type="number"], select { padding: 5px; border: 1px solid #ddd; border-radius: 4px; width: 150px; }
-        input[type="checkbox"] { width: auto; transform: scale(1.2); }
-        button { width: 100%; padding: 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; transition: 0.3s; }
-        button:hover { background-color: #0056b3; }
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+            --border-color: #e5e7eb;
+            --success-color: #059669;
+            --fail-color: #dc2626;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            color: #111827;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .section {
+            margin-bottom: 24px;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .section h3 {
+            margin: 0 0 16px 0;
+            font-size: 18px;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .input-group label {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .input-group .sub-text {
+            font-size: 12px;
+            color: #6b7280;
+            display: block;
+        }
+
+        input[type="number"], select {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            width: 140px;
+            font-size: 15px;
+            text-align: right;
+        }
+
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--primary-color);
+        }
+
+        .btn-calculate {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-calculate:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* 결과 화면 스타일 */
+        #result-area {
+            margin-top: 30px;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            display: none; /* 기본 숨김 */
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: 800;
+            margin: 10px 0;
+            color: var(--text-color);
+        }
+
+        .result-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .status-pass {
+            background-color: #d1fae5;
+            color: var(--success-color);
+        }
+
+        .status-fail {
+            background-color: #fee2e2;
+            color: var(--fail-color);
+        }
+
+        .result-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .detail-item {
+            font-size: 14px;
+            color: #4b5563;
+        }
         
-        #result-area { margin-top: 20px; padding: 20px; background-color: #e9ecef; border-radius: 5px; text-align: center; display: none; }
-        .score { font-size: 32px; font-weight: bold; color: #007bff; }
-        .badge { display: inline-block; padding: 5px 10px; border-radius: 15px; color: white; font-weight: bold; margin-top: 5px; }
-        .pass { background-color: #28a745; }
-        .fail { background-color: #dc3545; }
+        .detail-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #111827;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>F-2-7 비자 점수 계산기 (2026)</h1>
+    <header>
+        <h1>F-2-7 비자 점수 계산기</h1>
+        <div class="description">2026년 기준 우수인재 거주비자 자가진단</div>
+    </header>
 
-    <!-- 1. 기본 항목 -->
-    <div class="section">
-        <h3>1. 기본 소양</h3>
-        <div class="input-group">
-            <label>나이 (만)</label>
-            <input type="number" id="age" placeholder="예: 30">
-        </div>
-        <div class="input-group">
-            <label>학력</label>
-            <select id="education">
-                <option value="0">고졸 이하</option>
-                <option value="1">전문학사</option>
-                <option value="2">학사</option>
-                <option value="3">석사</option>
-                <option value="4">박사</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label>한국어 능력 (TOPIK/KIIP)</label>
-            <select id="korean">
-                <option value="1">1급 이하</option>
-                <option value="2">2급</option>
-                <option value="3">3급</option>
-                <option value="4">4급</option>
-                <option value="5">5급 이상</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label>연간 소득 (만원)</label>
-            <input type="number" id="income" placeholder="예: 4000">
-        </div>
-    </div>
-
-    <!-- 2. 가점 항목 -->
-    <div class="section">
-        <h3>2. 가점 항목</h3>
-        <div class="input-group">
-            <label>국내 학위 취득 여부</label>
-            <input type="checkbox" id="korean_degree">
-        </div>
-        <div class="input-group">
-            <label>국내 연속 체류 (년)</label>
-            <input type="number" id="stay_years" value="0">
-        </div>
-        <div class="input-group">
-            <label>국가공인 자격증 보유</label>
-            <input type="checkbox" id="cert">
-        </div>
-        <div class="input-group">
-            <label>추천서</label>
-            <select id="recommendation">
-                <option value="0">없음</option>
-                <option value="1">지자체 등</option>
-                <option value="2">중앙부처</option>
-            </select>
-        </div>
-        <div class="input-group">
-            <label>사회봉사 (시간)</label>
-            <input type="number" id="social" value="0">
-        </div>
-        <div class="input-group">
-            <label>연간 세금 납부 (만원)</label>
-            <input type="number" id="tax" value="0">
-        </div>
-    </div>
-
-    <!-- 3. 감점 항목 -->
-    <div class="section">
-        <h3>3. 감점 항목</h3>
-        <div class="input-group">
-            <label>출입국법 위반 (회)</label>
-            <input type="number" id="v_immigration" value="0">
-        </div>
-        <div class="input-group">
-            <label>기타 형사법 위반 (회)</label>
-            <input type="number" id="v_criminal" value="0">
-        </div>
-    </div>
-
-    <button onclick="calculateScore()">점수 계산하기</button>
-
-    <div id="result-area">
-        <div>총점</div>
-        <div class="score" id="score-display">0점</div>
-        <div id="result-badge" class="badge">결과</div>
-        <p id="stay-period">예상 체류기간: -</p>
-    </div>
-</div>
-
-<script>
-    // JavaScript: 로직 영역 (Python 코드를 번역한 부분)
-    function calculateScore() {
-        // 1. 입력값 가져오기 (HTML 요소 -> JS 변수)
-        let age = parseInt(document.getElementById('age').value) || 0;
-        let edu = parseInt(document.getElementById('education').value);
-        let korean = parseInt(document.getElementById('korean').value);
-        let income = parseInt(document.getElementById('income').value) || 0;
-        
-        let hasDegree = document.getElementById('korean_degree').checked;
-        let stayYears = parseInt(document.getElementById('stay_years').value) || 0;
-        let hasCert = document.getElementById('cert').checked;
-        let recommend = parseInt(document.getElementById('recommendation').value);
-        let social = parseInt(document.getElementById('social').value) || 0;
-        let tax = parseInt(document.getElementById('tax').value) || 0;
-        
-        let vImm = parseInt(document.getElementById('v_immigration').value) || 0;
-        let vCrim = parseInt(document.getElementById('v_criminal').value) || 0;
-
-        let score = 0;
-
-        // --- Python 로직과 동일 ---
-        
-        // 1. 나이
-        if (age >= 25 && age <= 29) score += 25;
-        else if ((age >= 1
+    <form id="visaForm" onsubmit="event.preventDefault(); calculateScore();">
+        <!-- 1. 기본 항목 -->
+        <div class="section">
+            <h3>🔹 기본 소양 (최대 130점)</h3>
+            
+            <div class="input-group">
+                <div>
+                    <label for="age">나이</label>
